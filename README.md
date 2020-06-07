@@ -89,7 +89,19 @@ It should be noted that there are three specific files that need to be modified 
 python -m SimpleHTTPServer 
 ```
 
-3)
+3)Clear the browser data, close all pages, and close all other unnecessary programs.
+
+4)Open the browser in incognito mode, enter localhost:8000, and select the corresponding html.
+
+5)Open the developer tool and record the time output by the console.
+
+6)Open the memory page of the developer tool, collect the heap snapshot three times, take the last time, (Chrome: switch to stats) to record all data.
+
+7)Close the browser and repeat steps 4-6 for other tests. Five tests per benchmark. Record 5 time data, memory data should be recorded for the first time.
+
+
+
+
 
 #### 3. 
 
@@ -104,6 +116,14 @@ Findings
 ### RQ1  Program Input Size
 
 ![Unable to display figure1. Check browser settings.](figs/figure.png)
+
+polybench-c
+
+|             | MINI_DATASET     | SMALL_DATASET | MEDIUM_DATASET | LARGE_DATASET | EXTRALARGE_DATASET |
+| ----------- | ---------------- | ------------- | -------------- | ------------- | ------------------ |
+| CORRELATION | M=28 <br />N =32 |               |                |               |                    |
+
+
 
 
 ### RQ2  Compiler Optimization
