@@ -23,13 +23,13 @@ Note that if you want to repeat the experiment in the paper, skip step 1.
 
 ### 1. Experiment Preparation
 
-####a) Source Code Transformation  
+#### a) Source Code Transformation  
 Currently, there is not a universal solution to make every benchmark compatible with Cheerp. 
 You can read modifications with comments in each benchmark to check what we have done, 
 the purposes of these fixes, possible side effects and how we minimize them.  
 
 [Check modified benchmarks.](modified_benchmarks)
-####b) Compilation to WebAssembly/JavaScript  
+#### b) Compilation to WebAssembly/JavaScript  
 [Check compiled benchmarks.](compiled_benchmarks)
 ##### PolyBenchC
 
@@ -74,7 +74,7 @@ Take compilation 'dfsin' benchmark as an example.
 
 ### 2. Experiment Process
 
-####a) Modify the HTML file to load the JavaScript/WebAssembly file:
+#### a) Modify the HTML file to load the JavaScript/WebAssembly file:
 JavaScript: replace the value of 'src' with the corresponding JavaScript file path, 
 then save the following HTML code as 'test.html';
 WebAssembly: replace the value of 'src' with the corresponding 'xx_load.js' file path, 
@@ -90,7 +90,7 @@ then save the following HTML code as 'test.html'.
 </html>
 ```
 
-####b) Build a local server where 'test.html' locates.
+#### b) Build a local server where 'test.html' locates.
 
 It is fine to use Node.js or any other approach to set up a server. Below is a simple method
 if you have python2 installed. 
@@ -99,21 +99,17 @@ if you have python2 installed.
 python -m SimpleHTTPServer 
 ```
 
-####c) Clear the browser data, close all pages, and close any unnecessary programs.
+#### c) Clear the browser data, close all pages, and close any unnecessary programs.
 
-####d) Open the browser in incognito mode, enter ```localhost:8000/test.html```.
+#### d) Open the browser in incognito mode, enter ```localhost:8000/test.html```.
 
-####e) Wait until browser stop loading, open the developer tool of the browser, 
-record the time output from the console.
+#### e) Wait until browser stop loading, open the developer tool of the browser, record the time output from the console.
 
-####f) Open the 'memory' page of the developer tool, 
-collect the heap snapshot three times, take the last time for stability, 
-(Chrome: switch to stats) to record all data.
+#### f) Open the 'memory' page of the developer tool, collect the heap snapshot three times, take the last time for stability, (Chrome: switch to stats) to record all data.
 
-####g) Close the browser. Repeat d-f) for 4 more times. The execution time/memory is the average of 
-5 time/memory data collected.
+#### g) Close the browser. Repeat d-f) for 4 more times. The execution time/memory is the average of 5 time/memory data collected.
  
-####h) Repeat steps d-g) for another benchmark. 
+#### h) Repeat steps d-g) for another benchmark. 
 
 ### 3. Statistics
 [Check raw test data of the experiment in paper.](test_results)  
@@ -124,7 +120,7 @@ Findings
 ### RQ1  Program Input Size
 [Detailed input size](input_size.md)
 
-![Unable to display figure1. Check browser settings.](figs/figure.png)
+![Unable to display figure. Check browser settings.](figs/input_size.png)
 
 
 
@@ -133,4 +129,12 @@ Findings
 ### RQ2  Compiler Optimization
 
 
+
+
+
 ### RQ3  rowsers and Platforms
+
+
+
+
+
