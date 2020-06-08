@@ -29,7 +29,7 @@ Setup and Use Instructions
 Download the whole repository, then follow instructions below to compile and run the experiment. 
 Note that if you want to repeat the experiment in the paper, skip step 1. 
  
-[Check compilation scripts.](compilation_scripts)
+[Check compilation scripts.](./compilation_scripts)
 
 ### 1. Experiment Preparation
 
@@ -38,9 +38,9 @@ Currently, there is not a universal solution to make every benchmark compatible 
 You can read modifications with comments in each benchmark to check what we have done, 
 the purposes of these fixes, possible side effects and how we minimize them.  
 
-[Check modified benchmarks.](modified_benchmarks)
+[Check modified benchmarks.](./modified_benchmarks)
 #### b) Compilation to WebAssembly/JavaScript  
-[Check compiled benchmarks.](compiled_benchmarks)
+[Check compiled benchmarks.](./compiled_benchmarks)
 ##### PolyBenchC
 
 Take compilation 'correlation' benchmark as an example. Pay attention to three compile options:
@@ -122,7 +122,7 @@ python -m SimpleHTTPServer
 #### h) Repeat steps d-g) for another benchmark. 
 
 ### 3. Statistics
-[Check raw test data of the experiment in paper.](test_results)  
+[Check raw test data of the experiment in paper.](./test_results)  
 
 Findings
 --
