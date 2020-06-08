@@ -1,0 +1,1 @@
+let t0 = performance.now();"use strict";/*Compiled using Cheerp (R) by Leaning Technologies Ltd*/var d=Math.imul;var e=Math.fround;var oSlot=0;var nullArray=[null];var nullObj={d:nullArray,o:0};function a(c,b){return 0|0;}a();let t1 = performance.now();console.log(((t1 - t0)/1000).toFixed(6));console.log("File Ver 200531 2200");
