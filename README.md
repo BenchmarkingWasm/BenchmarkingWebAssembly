@@ -1,4 +1,4 @@
-Benchmarking WebAssembly and JavaScript Programs
+Towards Understanding the Performance ofWebAssembly and JavaScript
 ==
 
 WebAssembly is the newest language to arrive on the web. It features a compact binary format which makes it faster to be loaded and decoded than JavaScript. While WebAssembly is generally expected to be faster than JavaScript, there have been mixed results in proving which code is faster. Unfortunately, the performance of WebAssembly and JavaScript is a complicated equation that is affected by various factors. As a result, developers often face a dilemma in choosing JavaScript or WebAssembly for their web application development. 
