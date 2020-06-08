@@ -148,7 +148,7 @@ The runtime memory usage of JavaScript stays fairly stable (between 878.73KB and
 -Ofast generates slower WebAssembly and JavaScript than -O1 and -Oz. -Oz leads to the fastest WebAssembly (0.86x compared to baseline optimization -O2) and the fastest JavaScript (0.94x). Although -O2 is supposed to generate faster target code than -O1 and -Oz, the JavaScript and WebAssembly compiled with -O2 are the slowest. Compared to the baseline where -O2 is used, the resulting code sizes with -O1, -Ofast, and -Oz optimizations are almost identical (with less than 2% variance) for both WebAssembly and JavaScript.  
 The memory usage of WebAssembly and JavaScript is mostly the same for all optimization levels. 
 
-### RQ3  rowsers and Platforms
+### RQ3  Browsers and Platforms
 
 ![Unable to display figure. Check browser settings.](figs/browser_time.png)
 
