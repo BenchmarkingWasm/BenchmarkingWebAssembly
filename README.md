@@ -1,15 +1,19 @@
-Towards Understanding the Performance ofWebAssembly and JavaScript
+Understanding the Performance of WebAssembly and JavaScript
 ==
 
-WebAssembly is the newest language to arrive on the web. It features a compact binary format which makes it faster to be loaded and decoded than JavaScript. While WebAssembly is generally expected to be faster than JavaScript, there have been mixed results in proving which code is faster. Unfortunately, the performance of WebAssembly and JavaScript is a complicated equation that is affected by various factors. As a result, developers often face a dilemma in choosing JavaScript or WebAssembly for their web application development. 
+WebAssembly is the newest language to arrive on the web. It features a compact binary format which makes it faster to be loaded and decoded than JavaScript. While WebAssembly is generally expected to be faster than JavaScript, there have been mixed results in proving which code is faster. Unfortunately, the performance of WebAssembly and JavaScript is a complicated equation that is affected by various factors. As a result, developers often face a dilemma in choosing JavaScript or WebAssembly for their web application development.
 
 In this paper, we conduct the first systematic study on the performance comparison of WebAssembly and JavaScript. We use a compiler that can generate both WebAssembly and JavaScript programs from a C source program. We tested 41 widely used C benchmarks and analyzed the contributing factors that impact WebAssembly and JavaScript's performance, providing various insights. We also report the challenges we encountered when compiling the C benchmarks to WebAssembly and discuss our solutions. 
 
-Our findings and insights include:   
-(1) while WebAssembly is faster than JavaScript when the program input size is small, for larger inputs, 43.9\% of the WebAssembly programs becomes slower than JavaScript;  
-(2) WebAssembly compilers are commonly built atop LLVM, where their optimizations are not designed for WebAssembly. Our experiments show that these optimizations become ineffective for WebAssembly and often work oppositely;  
-(3) the runtime performance of WebAssembly varies significantly depending on its execution environment, such as browsers and devices (e.g., desktop or mobile), while JavaScript programs perform similarly across the different environments;  
-(4) WebAssembly programs consistently consume significantly more memory than their JavaScript counterparts.   
+Our findings and insights include: 
+
+(1) while WebAssembly is faster than JavaScript when the program input size is small, for larger inputs, 43.9% of the WebAssembly programs becomes slower than JavaScript; 
+
+(2) WebAssembly compilers are commonly built atop LLVM, where their optimizations are not designed for WebAssembly. Our experiments show that these optimizations become ineffective for WebAssembly and often work oppositely; 
+
+(3) the runtime performance of WebAssembly and JavaScript varies significantly depending on its execution environment, such as browsers and devices (e.g., desktop or mobile); 
+
+(4) WebAssembly programs consistently consume significantly more memory than their JavaScript counterparts. 
 
 Our findings can help developers better understand when to choose WebAssembly over JavaScript or vice versa, and provide insights for WebAssembly tooling developers to identify optimization opportunities.
 
@@ -20,8 +24,6 @@ Dependencies
 - Python 2.7
 - Google Chrome, stable version 79   
 - Firefox, stable version 71
-<!-- Chrome d8 7.4.1
-- Spidermonkey js JavaScript-C71.0a1-->
 
 Setup and Use Instructions
 --
@@ -125,7 +127,7 @@ python -m SimpleHTTPServer
 [Check raw test data of the experiment in paper.](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/test_results) 
 
 
-Findings
+Some Findings
 --
 
 ### RQ1  Program Input Size
@@ -152,11 +154,17 @@ The memory usage of WebAssembly and JavaScript is mostly the same for all optimi
 
 ![Unable to display figure. Check browser settings.](figs/browser_time.png)
 
-When deployed on desktop, Firefox has small disadvantages (on average 1.06x) in executing the compiled JavaScript programs compared to  Chrome. However, Firefox executes WebAssembly much faster than Chrome (with 0.61x of the execution time).
-Compared to the result on desktop browsers, the performance comparison of Chrome and Firefox shows different result when deployed on mobile devices. Specifically, Firefox has better performance on executing JavaScript programs compared to Chrome (0.92x), but it takes almost twice the time (1.73x) to execute the WebAssembly counterparts.
-Both browsers run the programs in WebAssembly and JavaScript slower on the mobile devices than on the desktop versions. In particular, JavaScript executed on Chrome fo mobile is 2.70x slower than when executing on Chrome for desktop, and WebAssembly is 1.30x slower. Compared to Firefox for desktop, Firefox for mobile is 2.33x slower and 3.70x slower in executing WebAssembly and JavaScript respectively.
 
-<img src="figs/browser_memory.png" width="49%">
+When deployed on desktop, Firefox is slightly slower (1.06x) in executing the compiled JavaScript programs compared to Chrome. However, Firefox executes WebAssembly much faster than Chrome (0.61x).
+Compared to the result on desktop, the performance comparison of the three browsers shows different result when deployed on mobile devices.
+Specifically, Firefox has better performance on executing JavaScript programs compared to Chrome (0.67x), but it takes much more time (1.48x) to execute the WebAssembly counterparts.
+Similarly, Edge performs worse than Chrome for both JavaScript (1.40x) and WebAssembly (1.28x) on desktop. However, Edge outperforms Chrome on mobile for JavaScript (0.81x) and WebAssembly (0.83x). 
 
-On average, Firefox takes less memory usage than Chrome for both JavaScript (0.57x) and WebAssembly (0.83x) programs. For both desktop browsers, WebAssembly uses more memory (3.39x on Chrome and 4.93x on Firefox) than JavaScript. Note that the memory usage for the mobile browsers are not available, thus we only show the memory results on desktop browsers.
+All three browsers run WebAssembly and JavaScript slower on mobile than on desktop. Specifically, WebAssembly executed on mobile Chrome is 3.57x slower than desktop Chrome, and JavaScript is 5.48x slower. Compared to Firefox on desktop, mobile Firefox is 8.73x slower and 3.46x slower in executing WebAssembly and JavaScript respectively. Similarly, compared to Edge on desktop, mobile Edge is 2.31x slower and 3.17x slower in executing WebAssembly and JavaScript respectively.
 
+![Unable to display figure. Check browser settings.](figs/browser_memory.png)
+
+On average, desktop Firefox uses less memory than desktop Chrome for both JavaScript (0.57x) and WebAssembly (0.83x). Desktop Edge uses similar memory as desktop Chrome (0.98x for JavaScript and 1.00x for WebAssembly). 
+On the contrary, mobile Firefox and mobile Edge take more memory than mobile Chrome: 1.70x for JavaScript and 1.15x for WebAssembly on Firefox; 2.38x for JavaScript and 1.22x for WebAssembly on Edge.
+
+For all desktop browsers, WebAssembly uses more memory (3.39x on Chrome, 4.93x on Firefox, and 3.44x on Edge) than JavaScript. Browsers for mobile show the similar result: WebAssembly uses 6.20x more memory on Chrome, 4.18x on Firefox, and 3.19x on Edge.
