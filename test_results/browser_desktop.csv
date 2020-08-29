@@ -1,4 +1,4 @@
-0825name,chrome first time,firefox first time,dEdge time,chrome memory,firefox memory,dEdge memory
+name,chrome first time,firefox first time,dEdge time,chrome memory,firefox memory,dEdge memory
 covariance_-DMEDIUM_DATASET_O2,0.0389736,0.03571,0.0621,885,487,879
 covariance_-DMEDIUM_DATASET_O2_load,0.047529,0.0250366,0.065845,2977,2424,2978
 correlation_-DMEDIUM_DATASET_O2,0.0554958,0.0433118,0.083574,885,526,879
