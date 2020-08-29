@@ -24,6 +24,7 @@ Dependencies
 - Python 2.7
 - Google Chrome, stable version 79   
 - Firefox, stable version 71
+- Microsoft Edge version 79
 
 Setup and Use Instructions
 --
