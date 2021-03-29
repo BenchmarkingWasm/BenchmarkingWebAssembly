@@ -3,7 +3,9 @@ import sys
 # gcc linear-algebra/blas/gemm/gemm.c utilities/polybench.c -I utilities -o test -DPOLYBENCH_TIME -DMEDIUM_DATASET -w -O3
 # /opt/cheerp/bin/clang -target cheerp linear-algebra/blas/gemm/gemm.c utilities/polybench.c -I utilities -DPOLYBENCH_TIME -DMEDIUM_DATASET -w -o pbc_gemm.js -O3
 # /opt/cheerp/bin/clang -target cheerp linear-algebra/blas/gemm/gemm.c utilities/polybench.c -I utilities -DPOLYBENCH_TIME -DMEDIUM_DATASET -w -o pbc_gemm.wasm -O3 -cheerp-mode=wasm -cheerp-wasm-loader=pbc_gemm_loader.js
-strs = ["linear-algebra/blas/gemm/gemm.c","linear-algebra/blas/gemver/gemver.c",
+strs = [
+"linear-algebra/blas/gemm/gemm.c",
+"linear-algebra/blas/gemver/gemver.c",
 "linear-algebra/blas/gesummv/gesummv.c"
 ,"linear-algebra/blas/symm/symm.c"
 ,"linear-algebra/blas/syr2k/syr2k.c"

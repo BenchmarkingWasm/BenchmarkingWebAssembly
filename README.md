@@ -24,13 +24,13 @@ Dependencies
 - Python 2.7
 - Google Chrome, stable version 79   
 - Firefox, stable version 71
-- Microsoft Edge version 79
+- Microsoft Edge, stable version 79
 
 Setup and Use Instructions
 --
 
 Download the whole repository, then follow instructions below to compile and run the experiment. 
-Note that if you want to repeat the experiment in the paper, skip step 1. 
+Note that if you want to repeat the experiment in the paper, you can skip step 1. 
  
 [Check compilation scripts.](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/compilation_scripts)
 
@@ -41,15 +41,32 @@ Currently, there is not a universal solution to make every benchmark compatible 
 You can read modifications with comments in each benchmark to check what we have done, 
 the purposes of these fixes, possible side effects and how we minimize them.  
 
-[Check modified benchmarks.](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/modified_benchmarks)
+We have uploaded modified PolyBenchC and CHStone benchmarks. You can
+[check modified benchmarks here.](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/modified_benchmarks)
+
+
 #### b) Compilation to WebAssembly/JavaScript  
-[Check compiled benchmarks.](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/compiled_benchmarks)
+If you want to test PolyBenchC and CHStone on Cheerp 2.0 only, we have already compiled them under all 
+optimization levels and all input sizes. You can 
+[check compiled benchmarks here](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/compiled_benchmarks)
+and jump to step 2.
+If you want to test other benchmarks or want to use different compilation settings, please continue to read.
 ##### PolyBenchC
 
-Take compilation 'correlation' benchmark as an example. Pay attention to three compile options:
+We have provided Python scripts ```compilation_scripts/poly.py``` and ```compilation_scripts/poly2.py``` 
+for developers to compile modified PolyBenchC benchmarks. 
+To run them, make sure you have installed all dependencies mentioned above, then type ```python poly.py``` and 
+```python poly2.py``` in your shell.
+
+If you want to understand, write or modify the script by yourself, this is an example of 
+compiling 'correlation' benchmark in PolyBenchC. 
+
+Pay attention to three compile options:
 ```-cheerp-linear-heap-size=1024``` for enlarging WebAssembly maximum heap size to 1024 MiB,
 ```-DSMALL_DATASET``` for setting input size to 'S',
 ```-Oz``` for using optimization level ```-Oz```.
+
+It is the final script used by our scripts:
 
 ```
 //Compile to JavaScript file
@@ -73,7 +90,13 @@ It should be noted that there are three specific benchmarks in this suite that n
 
 ##### CHStone
 
-Take compilation 'dfsin' benchmark as an example.
+We have provided the Python script ```compilation_scripts/chs.py```
+for developers to compile modified CHStone benchmarks.
+To run them, make sure you have installed all dependencies mentioned above, 
+then type ```python chs.py``` in your shell.
+
+If you want to understand, write or modify the script by yourself, this is the final script used by our scripts
+to compile 'dfsin' benchmark in CHStone.
 
 ```
 //Compile to JavaScript file
