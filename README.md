@@ -30,9 +30,9 @@ Setup and Use Instructions
 --
 
 Download the whole repository, then follow instructions below to compile and run the experiment. 
-Note that if you want to repeat the experiment in the paper, you can skip step 1. 
- 
-[Check compilation scripts.](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/compilation_scripts)
+Note that if you want to repeat the experiment in the paper, you can directly use
+[compiled scripts](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/compilation_scripts)
+and skip step 1.
 
 ### 1. Experiment Preparation
 
