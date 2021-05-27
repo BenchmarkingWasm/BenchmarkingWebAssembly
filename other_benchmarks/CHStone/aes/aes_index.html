@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CHStone - AES</title>
+    <script type="text/javascript" src="aes.js"></script>
+</head>
+<body>
+    <script>
+        let loop = 16;
+
+        let date1 = performance.now();
+
+        var key = [43, 126, 21, 22, 40, 210, 174, 166, 171, 247, 21, 136, 9, 207, 79, 60];
+        
+        var textBytes = [50,67,246,168,136,90,48,141,49,49,152,162,224,55,7,52];
+
+        for (let i=0; i<loop; i++)
+        {
+        var aesEcb = new aesjs.ModeOfOperation.ecb(key);
+        var encryptedBytes = aesEcb.encrypt(textBytes);
+
+        var decryptedBytes = aesEcb.decrypt(encryptedBytes);
+        }
+
+        if (textBytes.toString() !== decryptedBytes.toString())
+        {
+            console.log("CHStone AES FAILED");
+        }
+        else
+        {
+            console.log('CHStone AES OK');
+        }
+
+        let date2 = performance.now();
+        console.log(((date2 - date1)/1000).toFixed(6));
+    </script>
+</body>
+</html>

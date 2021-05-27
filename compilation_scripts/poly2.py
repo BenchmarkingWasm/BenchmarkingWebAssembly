@@ -113,6 +113,3 @@ for i in range(len(strs)):
         print("echo " + "'" + name_str9 + "'")
         print(time_str)
         print("echo 'end'")
-
-# 
-

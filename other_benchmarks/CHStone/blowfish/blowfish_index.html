@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CHStone BLOWFISH</title>
+    <script type="text/javascript" src="blowfish.js"></script>
+</head>
+<body>
+<script>
+    let date1 = performance.now();
+
+    var plaintext = "1234567890123456789012345678901234567890";
+
+    var key = "1234567890123456789012345678901234567890";
+
+    var IV = "1234123412123412341212341234121234123412";
+    console.log(IV.length);
+
+    for (var i=0; i<16; i++)
+    {
+        enc = blowfish.encrypt(plaintext, key, {outputType: 2, cipherMode: 3, iv: IV});
+        dec = blowfish.decrypt(enc, key, {outputType: 2, cipherMode: 3, iv: IV});
+    }
+
+    if (plaintext !== dec)
+    {
+        console.log('CHStone BLOWFISH OK');
+    }
+    else
+    {
+        console.log('CHStone BLOWFISH OK');
+    }
+
+    let date2 = performance.now();
+    console.log(((date2 - date1)/1000).toFixed(6));
+</script>
+</body>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PolyBenchC</title>
+    <script src="math.js" type="text/javascript"></script>
+</head>
+<body>
+<script>
+
+    function print(a) {
+        console.log(a);
+    }
+
+    let EXPSIZE = "MEDIUM";
+
+    // 3mm
+    {
+        let NI = 180;
+        let NJ = 190;
+        let NK = 200;
+        let NL = 210;
+        let NM = 220;
+        // DATA_TYPE is double (default, using normal mathjs mode)
+        // =========== allocation
+        E = math.zeros([NI, NJ]);
+        A = math.zeros([NI, NK]);
+        B = math.zeros([NK, NJ]);
+        F = math.zeros([NJ, NL]);
+        C = math.zeros([NJ, NM]);
+        D = math.zeros([NM, NL]);
+        G = math.zeros([NI, NL]);
+
+        // print(math.size(E));
+        // =========== initialization
+        let i, j;
+        for (i = 0; i < NI; i++)    {
+            for (j = 0; j < NK; j++) {
+                A[i][j] = ((i * j + 1) % NI) / (5 * NI);
+            }
+        }
+        for (i = 0; i < NK; i++)
+            for (j = 0; j < NJ; j++)
+                B[i][j] = ((i*(j+1)+2) % NJ) / (5*NJ);
+        for (i = 0; i < NJ; i++)
+            for (j = 0; j < NM; j++)
+                C[i][j] = (i*(j+3) % NL) / (5*NL);
+        for (i = 0; i < NM; i++)
+            for (j = 0; j < NL; j++)
+                D[i][j] = ((i*(j+2)+2) % NK) / (5*NK);
+        // ==================== calculation
+        let date1 = performance.now();
+        for (i = 0; i < NI; i++)
+            for (j = 0; j < NJ; j++)
+            {
+                E[i][j] = 0;
+                for (k = 0; k < NK; ++k)
+                    E[i][j] += A[i][k] * B[k][j];
+            }
+        /* F := C*D */
+        for (i = 0; i < NJ; i++)
+            for (j = 0; j < NL; j++)
+            {
+                F[i][j] = 0;
+                for (k = 0; k < NM; ++k)
+                    F[i][j] += C[i][k] * D[k][j];
+            }
+        /* G := E*F */
+        for (i = 0; i < NI; i++)
+            for (j = 0; j < NL; j++)
+            {
+                G[i][j] = 0;
+                for (k = 0; k < NJ; ++k)
+                    G[i][j] += E[i][k] * F[k][j];
+            }
+        // ============ validation
+        if (0)
+        {
+            console.log("PolyBenchC 3mm FAILED");
+        }
+        else
+        {
+            console.log('PolyBenchC 3mm OK');
+        }
+        let date2 = performance.now();
+        console.log(((date2 - date1)/1000).toFixed(6));
+        // ============ de-allocation
+        // not applicable on JS: no force GC available
+    }
+
+
+    // covariance
+    {
+        let M = 240;
+        let N = 260;
+        // DATA_TYPE is double (default, using normal mathjs mode)
+        // =========== allocation
+        data = math.zeros([N, M]);
+        cov = math.zeros([M, M]);
+        mean = math.zeros(M);
+        //print(mean);
+        // =========== initialization
+        let i, j, k;
+        let float_n = N;
+        for (i = 0; i < N; i++)
+            for (j = 0; j < M; j++)
+                data[i][j] = (i*j) / M;
+        // ==================== calculation
+        let date1 = performance.now();
+        for (j = 0; j < M; j++)
+        {
+            mean[j] = 0;
+            for (i = 0; i < N; i++)
+                mean[j] += data[i][j];
+            mean[j] /= float_n;
+        }
+
+        for (i = 0; i < N; i++)
+            for (j = 0; j < M; j++)
+                data[i][j] -= mean[j];
+
+        for (i = 0; i < M; i++)
+            for (j = i; j < M; j++)
+            {
+                cov[i][j] = 0;
+                for (k = 0; k < N; k++)
+                    cov[i][j] += data[k][i] * data[k][j];
+                cov[i][j] /= (float_n - 1);
+                cov[j][i] = cov[i][j];
+            }
+        // ============ validation
+        if (0)
+        {
+            console.log("PolyBenchC covariance FAILED");
+        }
+        else
+        {
+            console.log('PolyBenchC covariance OK');
+        }
+        let date2 = performance.now();
+        console.log(((date2 - date1)/1000).toFixed(6));
+        // ============ de-allocation
+        // not applicable on JS: no force GC available
+    }
+
+
+    // syr2k
+    {
+        let M = 200;
+        let N = 240;
+        // DATA_TYPE is double (default, using normal mathjs mode)
+        // =========== allocation
+        C = math.zeros([N, N]);
+        A = math.zeros([N, M]);
+        B = math.zeros([N, M]);
+        // =========== initialization
+        let i, j, k;
+        let alpha = 1.5;
+        let beta = 1.2;
+        for (i = 0; i < N; i++)
+            for (j = 0; j < M; j++) {
+                A[i][j] = ((i*j+1)%N) / N;
+                B[i][j] = ((i*j+2)%M) / M;
+            }
+        for (i = 0; i < N; i++)
+            for (j = 0; j < N; j++) {
+                C[i][j] = ((i*j+3)%N) / M;
+            }
+        // ==================== calculation
+        let date1 = performance.now();
+        for (i = 0; i < N; i++) {
+            for (j = 0; j <= i; j++)
+                C[i][j] *= beta;
+            for (k = 0; k < M; k++)
+                for (j = 0; j <= i; j++)
+                {
+                    C[i][j] += A[j][k]*alpha*B[i][k] + B[j][k]*alpha*A[i][k];
+                }
+        }
+        // ============ validation
+        if (0)
+        {
+            console.log("PolyBenchC syr2k FAILED");
+        }
+        else
+        {
+            console.log('PolyBenchC syr2k OK');
+        }
+        let date2 = performance.now();
+        console.log(((date2 - date1)/1000).toFixed(6));
+        // ============ de-allocation
+        // not applicable on JS: no force GC available
+    }
+
+
+    // ludcmp
+    {
+        let N = 400;
+        // DATA_TYPE is double (default, using normal mathjs mode)
+        // =========== allocation
+        A = math.zeros([N, N]);
+        b = math.zeros(N);
+        x = math.zeros(N);
+        y = math.zeros(N);
+        // =========== initialization
+        let i, j, k;
+        let fn = N;
+        for (i = 0; i < N; i++)
+        {
+            x[i] = 0;
+            y[i] = 0;
+            b[i] = (i+1)/fn/2.0 + 4;
+        }
+        for (i = 0; i < N; i++)
+        {
+            for (j = 0; j <= i; j++)
+                A[i][j] = (-j % N) / N + 1;
+            for (j = i+1; j < N; j++) {
+                A[i][j] = 0;
+            }
+            A[i][i] = 1;
+        }
+        let r,s,t;
+        B = math.zeros([N, N]);
+        for (r = 0; r < N; ++r)
+            for (s = 0; s < N; ++s)
+                B[r][s] = 0;
+        for (t = 0; t < N; ++t)
+            for (r = 0; r < N; ++r)
+                for (s = 0; s < N; ++s)
+                    B[r][s] += A[r][t] * A[s][t];
+        for (r = 0; r < N; ++r)
+            for (s = 0; s < N; ++s)
+                A[r][s] = B[r][s];
+        // ==================== calculation
+        let date1 = performance.now();
+        let w;
+        for (i = 0; i < N; i++) {
+            for (j = 0; j < i; j++) {
+                w = A[i][j];
+                for (k = 0; k < j; k++) {
+                    w -= A[i][k] * A[k][j];
+                }
+                A[i][j] = w / A[j][j];
+            }
+            for (j = i; j < N; j++) {
+                w = A[i][j];
+                for (k = 0; k < i; k++) {
+                    w -= A[i][k] * A[k][j];
+                }
+                A[i][j] = w;
+            }
+        }
+
+        for (i = 0; i < N; i++) {
+            w = b[i];
+            for (j = 0; j < i; j++)
+                w -= A[i][j] * y[j];
+            y[i] = w;
+        }
+
+        for (i = N-1; i >= 0; i--) {
+            w = y[i];
+            for (j = i+1; j < N; j++)
+                w -= A[i][j] * x[j];
+            x[i] = w / A[i][i];
+        }
+        // ============ validation
+        if (0)
+        {
+            console.log("PolyBenchC ludcmp FAILED");
+        }
+        else
+        {
+            console.log('PolyBenchC ludcmp OK');
+        }
+        let date2 = performance.now();
+        console.log(((date2 - date1)/1000).toFixed(6));
+        // ============ de-allocation
+        // not applicable on JS: no force GC available
+    }
+
+
+    // floyd-warshall
+    {
+        let N = 500;
+        // DATA_TYPE is double (default, using normal mathjs mode)
+        // =========== allocation
+        path = math.zeros([N, N]);
+        // =========== initialization
+        let i, j, k;
+        for (i = 0; i < N; i++)
+            for (j = 0; j < N; j++) {
+                path[i][j] = i*j%7+1;
+                if ((i+j)%13 === 0 || (i+j)%7===0 || (i+j)%11 === 0)
+                    path[i][j] = 999;
+            }
+        // ==================== calculation
+        let date1 = performance.now();
+        for (k = 0; k < N; k++)
+        {
+            for(i = 0; i < N; i++)
+                for (j = 0; j < N; j++)
+                    path[i][j] = path[i][j] < path[i][k] + path[k][j] ?
+                        path[i][j] : path[i][k] + path[k][j];
+        }
+        // ============ validation
+        if (0)
+        {
+            console.log("PolyBenchC floyd-warshall FAILED");
+        }
+        else
+        {
+            console.log('PolyBenchC floyd-warshall OK');
+        }
+        let date2 = performance.now();
+        console.log(((date2 - date1)/1000).toFixed(6));
+        // ============ de-allocation
+        // not applicable on JS: no force GC available
+    }
+
+    // heat-3d
+    {
+        let TSTEPS = 100;     // medium is 100
+        let N = 40;
+        // DATA_TYPE is double (default, using normal mathjs mode)
+        // =========== allocation
+        A = math.zeros([N, N, N]);
+        B = math.zeros([N, N, N]);
+        // =========== initialization
+        let i, j, k, t;
+        for (i = 0; i < N; i++)
+            for (j = 0; j < N; j++)
+                for (k = 0; k < N; k++)
+                    A[i][j][k] = B[i][j][k] = (i + j + (N-k))* 10 / N;
+        // ==================== calculation
+        let date1 = performance.now();
+        for (t = 1; t <= TSTEPS; t++) {
+            for (i = 1; i < N-1; i++) {
+                for (j = 1; j < N-1; j++) {
+                    for (k = 1; k < N-1; k++) {
+                        B[i][j][k] =  0.125 * (A[i+1][j][k] - 2.0 * A[i][j][k] + A[i-1][j][k])
+                                    + 0.125 * (A[i][j+1][k] - 2.0 * A[i][j][k] + A[i][j-1][k])
+                                    + 0.125 * (A[i][j][k+1] - 2.0 * A[i][j][k] + A[i][j][k-1])
+                                    + A[i][j][k];
+                    }
+                }
+            }
+            for (i = 1; i < N-1; i++) {
+                for (j = 1; j < N-1; j++) {
+                    for (k = 1; k < N-1; k++) {
+                        A[i][j][k] = 0.125 * (B[i+1][j][k] - 2.0 * B[i][j][k] + B[i-1][j][k])
+                                   + 0.125 * (B[i][j+1][k] - 2.0 * B[i][j][k] + B[i][j-1][k])
+                                   + 0.125 * (B[i][j][k+1] - 2.0 * B[i][j][k] + B[i][j][k-1])
+                                   + B[i][j][k];
+                    }
+                }
+            }
+        }
+        // ============ validation
+        if (0)
+        {
+            console.log("PolyBenchC heat-3d FAILED");
+        }
+        else
+        {
+            console.log('PolyBenchC heat-3d OK');
+        }
+        let date2 = performance.now();
+        console.log(((date2 - date1)/1000).toFixed(6));
+        // ============ de-allocation
+        // not applicable on JS: no force GC available
+    }
+
+    // heat-3d (native API)
+    // createArray() is from https://stackoverflow.com/a/966938
+    {
+        let TSTEPS = 100;     // medium is 100
+        let N = 40;
+        // DATA_TYPE is double (default, using normal mathjs mode)
+        // =========== allocation
+        function createArray(length) {
+            var arr = new Array(length || 0),
+                i = length;
+            if (arguments.length > 1) {
+                var args = Array.prototype.slice.call(arguments, 1);
+                while(i--) arr[length-1 - i] = createArray.apply(this, args);
+            }
+            return arr;
+        }
+
+        A = createArray(N, N, N);
+        B = createArray(N, N, N);
+        // =========== initialization
+        let i, j, k, t;
+        for (i = 0; i < N; i++)
+            for (j = 0; j < N; j++)
+                for (k = 0; k < N; k++)
+                    A[i][j][k] = B[i][j][k] = (i + j + (N-k))* 10 / N;
+        // ==================== calculation
+        let date1 = performance.now();
+
+        for (t = 1; t <= TSTEPS; t++) {
+            for (i = 1; i < N-1; i++) {
+                for (j = 1; j < N-1; j++) {
+                    for (k = 1; k < N-1; k++) {
+                        B[i][j][k] =  0.125 * (A[i+1][j][k] - 2.0 * A[i][j][k] + A[i-1][j][k])
+                            + 0.125 * (A[i][j+1][k] - 2.0 * A[i][j][k] + A[i][j-1][k])
+                            + 0.125 * (A[i][j][k+1] - 2.0 * A[i][j][k] + A[i][j][k-1])
+                            + A[i][j][k];
+                    }
+                }
+            }
+            for (i = 1; i < N-1; i++) {
+                for (j = 1; j < N-1; j++) {
+                    for (k = 1; k < N-1; k++) {
+                        A[i][j][k] = 0.125 * (B[i+1][j][k] - 2.0 * B[i][j][k] + B[i-1][j][k])
+                            + 0.125 * (B[i][j+1][k] - 2.0 * B[i][j][k] + B[i][j-1][k])
+                            + 0.125 * (B[i][j][k+1] - 2.0 * B[i][j][k] + B[i][j][k-1])
+                            + B[i][j][k];
+                    }
+                }
+            }
+        }
+        // ============ validation
+        if (0)
+        {
+            console.log("PolyBenchC heat-3d (native) FAILED");
+        }
+        else
+        {
+            console.log('PolyBenchC heat-3d (native) OK');
+        }
+        let date2 = performance.now();
+        console.log(((date2 - date1)/1000).toFixed(6));
+        // ============ de-allocation
+        // not applicable on JS: no force GC available
+    }
+
+</script>
+</body>
+</html>

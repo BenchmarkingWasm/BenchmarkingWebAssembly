@@ -1,21 +1,20 @@
-Understanding the Performance of WebAssembly and JavaScript
+Understanding the Performance of WebAssembly Applications
 ==
 
-WebAssembly is the newest language to arrive on the web. It features a compact binary format which makes it faster to be loaded and decoded than JavaScript. While WebAssembly is generally expected to be faster than JavaScript, there have been mixed results in proving which code is faster. Unfortunately, the performance of WebAssembly and JavaScript is a complicated equation that is affected by various factors. As a result, developers often face a dilemma in choosing JavaScript or WebAssembly for their web application development.
+WebAssembly is the newest language to arrive on the web.
+It features a compact binary format, making it fast to be loaded and decoded.
+While WebAssembly is generally expected to be faster than JavaScript, there have been mixed results in proving which code is faster. Little research has been done in understanding WebAssembly's performance advantage.
+In this paper, we conduct the first systematic study to understand the performance of WebAssembly applications along with JavaScript.
+Our measurements were performed on three different types of subject programs with diverse settings.
 
-In this paper, we conduct the first systematic study on the performance comparison of WebAssembly and JavaScript. We use a compiler that can generate both WebAssembly and JavaScript programs from a C source program. We tested 41 widely used C benchmarks and analyzed the contributing factors that impact WebAssembly and JavaScript's performance, providing various insights. We also report the challenges we encountered when compiling the C benchmarks to WebAssembly and discuss our solutions. 
+Among others, our findings include: (1) WebAssembly compilers are commonly built atop LLVM, where their optimizations are not tailored for WebAssembly. We show that these optimizations often become ineffective for WebAssembly and sometimes even work oppositely;
+(2) when program input size is small, WebAssembly is faster than JavaScript. However, WebAssembly programs become slower for larger inputs;
+(3) the runtime performance of WebAssembly and JavaScript varies substantially depending on the execution environment;
+and (4) WebAssembly uses significantly more memory than their JavaScript counterparts.
+Our findings provide insights for WebAssembly tooling developers to identify optimization opportunities.
+We also report the challenges when we compile the benchmarks to WebAssembly and discuss our solutions.
 
-Our findings and insights include: 
-
-(1) while WebAssembly is faster than JavaScript when the program input size is small, for larger inputs, 43.9% of the WebAssembly programs becomes slower than JavaScript; 
-
-(2) WebAssembly compilers are commonly built atop LLVM, where their optimizations are not designed for WebAssembly. Our experiments show that these optimizations become ineffective for WebAssembly and often work oppositely; 
-
-(3) the runtime performance of WebAssembly and JavaScript varies significantly depending on its execution environment, such as browsers and devices (e.g., desktop or mobile); 
-
-(4) WebAssembly programs consistently consume significantly more memory than their JavaScript counterparts. 
-
-Our findings can help developers better understand when to choose WebAssembly over JavaScript or vice versa, and provide insights for WebAssembly tooling developers to identify optimization opportunities.
+[Raw experiment data in paper.](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/test_results)
 
 Dependencies
 --
@@ -34,7 +33,7 @@ Note that if you want to repeat the experiment in the paper, you can directly us
 [compiled scripts](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/compilation_scripts)
 and skip step 1.
 
-### 1. Experiment Preparation
+### 1. PolyBenchC and CHStone Experiment Preparation
 
 #### a) Source Code Transformation  
 Currently, there is not a universal solution to make every benchmark compatible with Cheerp. 
@@ -54,9 +53,7 @@ If you want to test other benchmarks or want to use different compilation settin
 ##### PolyBenchC
 
 We have provided Python scripts ```compilation_scripts/poly.py``` and ```compilation_scripts/poly2.py``` 
-for developers to compile modified PolyBenchC benchmarks. 
-To run them, make sure you have installed all dependencies mentioned above, then type ```python poly.py``` and 
-```python poly2.py``` in your shell.
+as the reference for developers to compile their own modified PolyBenchC benchmarks. 
 
 If you want to understand, write or modify the script by yourself, this is an example of 
 compiling 'correlation' benchmark in PolyBenchC. 
@@ -91,9 +88,7 @@ It should be noted that there are three specific benchmarks in this suite that n
 ##### CHStone
 
 We have provided the Python script ```compilation_scripts/chs.py```
-for developers to compile modified CHStone benchmarks.
-To run them, make sure you have installed all dependencies mentioned above, 
-then type ```python chs.py``` in your shell.
+as the reference for developers to compile their own modified PolyBenchC benchmarks.
 
 If you want to understand, write or modify the script by yourself, this is the final script used by our scripts
 to compile 'dfsin' benchmark in CHStone.
@@ -112,7 +107,7 @@ to compile 'dfsin' benchmark in CHStone.
 
 #### a) Modify the HTML file to load the JavaScript/WebAssembly file:
 JavaScript: replace the value of 'src' with the corresponding JavaScript file path, 
-then save the following HTML code as 'test.html';
+then save the following HTML code as 'test.html'.  
 WebAssembly: replace the value of 'src' with the corresponding 'xx_load.js' file path, 
 then save the following HTML code as 'test.html'.
 
@@ -128,11 +123,15 @@ then save the following HTML code as 'test.html'.
 
 #### b) Build a local server where 'test.html' locates.
 
-It is fine to use Node.js or any other approach to set up a server. Below is a simple method
+It is fine to use Node.js or any other approach to set up a server under compiled_benchmarks/. Below is a simple method
 if you have python2 installed. 
 ```
 //Works with python 2.7
 python -m SimpleHTTPServer 
+```
+We provide an alternative way to set up a wasm-compatible python server:
+```python
+python compiled_benchmarks/server.py
 ```
 
 #### c) Clear the browser data, close all pages, and close any unnecessary programs.
@@ -147,9 +146,23 @@ python -m SimpleHTTPServer
  
 #### h) Repeat steps d-g) for another benchmark. 
 
-### 3. Statistics
-[Check raw test data of the experiment in paper.](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/test_results) 
+#####An alternative way to automatically execute step c) to g):  
+Extra dependencies for this script:
+- Python 3.7 and above
+- chromedriver, version corresponding to your Chrome version
+- Selenium
+Install all dependencies, fill your chromedriver path in line 19 of ```auto.py```, then run
+```python
+python3 auto.py
+```
 
+### 3. Manually Implementation of JS Benchmarks and Real-World Applications
+
+[Manually Implementation of JS Benchmarks](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/other_benchmarks)  
+[Long.js](https://github.com/dcodeIO/Long.js/)  
+[Hyphenopoly: WASM](https://github.com/mnater/Hyphenopoly) and [Hyphenopoly: JS](https://github.com/mnater/Hyphenator)  
+[FFmpeg: WASM](https://github.com/ffmpegwasm/ffmpeg.wasm), [FFmpeg:JS](https://github.com/damianociarla/node-ffmpeg), 
+and the [input file](https://moon.nasa.gov/resources/99/the-moons-role-in-a-solar-eclipse/) for FFmpeg conversion.
 
 Some Findings
 --
