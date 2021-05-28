@@ -28,42 +28,35 @@ Dependencies
 Setup and Use Instructions
 --
 
-Download the whole repository, then follow instructions below to compile and run the experiment. 
-Note that if you want to repeat the experiment in the paper, you can directly use
-[compiled scripts](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/compilation_scripts)
+Download the whole repository, then follow the instruction to compile and run the experiment. 
+Note that if you only want to repeat the experiment in the paper, you can directly use
+[compiled benchmarks](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/compiled_benchmarks)
 and skip step 1.
 
 ### 1. PolyBenchC and CHStone Experiment Preparation
 
 #### a) Source Code Transformation  
-Currently, there is not a universal solution to make every benchmark compatible with Cheerp. 
+Currently, there is not a universal automated solution to make every benchmark compatible with Cheerp. 
 You can read modifications with comments in each benchmark to check what we have done, 
 the purposes of these fixes, possible side effects and how we minimize them.  
 
 We have uploaded modified PolyBenchC and CHStone benchmarks. You can
-[check modified benchmarks here.](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/modified_benchmarks)
+[get modified benchmarks here.](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/modified_benchmarks)
 
 
 #### b) Compilation to WebAssembly/JavaScript  
-If you want to test PolyBenchC and CHStone on Cheerp 2.0 only, we have already compiled them under all 
-optimization levels and all input sizes. You can 
-[check compiled benchmarks here](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/compiled_benchmarks)
-and jump to step 2.
-If you want to test other benchmarks or want to use different compilation settings, please continue to read.
+If you want to repeat the experiment in the paper, we provide compiled benchmarks under all 
+optimization levels and all input sizes using Cheerp. You can 
+[get compiled benchmarks here](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/compiled_benchmarks)
+and jump to step 2.  
+The following content is for readers who want to use different compilation settings.
 ##### PolyBenchC
 
-We have provided Python scripts ```compilation_scripts/poly.py``` and ```compilation_scripts/poly2.py``` 
-as the reference for developers to compile their own modified PolyBenchC benchmarks. 
+Scripts ```compilation_scripts/poly.py``` and ```compilation_scripts/poly2.py``` 
+can be the reference for developers to compile their own modified PolyBenchC benchmarks. 
 
-If you want to understand, write or modify the script by yourself, this is an example of 
-compiling 'correlation' benchmark in PolyBenchC. 
-
-Pay attention to three compile options:
-```-cheerp-linear-heap-size=1024``` for enlarging WebAssembly maximum heap size to 1024 MiB,
-```-DSMALL_DATASET``` for setting input size to 'S',
-```-Oz``` for using optimization level ```-Oz```.
-
-It is the final script used by our scripts:
+If you want to write or modify the compilation script by yourself, this is the final command used by our scripts 
+to compile 'correlation' benchmark in PolyBenchC. 
 
 ```
 //Compile to JavaScript file
@@ -75,22 +68,29 @@ It is the final script used by our scripts:
 /opt/cheerp/bin/clang -target cheerp datamining/correlation/correlation.c utilities/polybench.c -I utilities -DPOLYBENCH_TIME -cheerp-linear-heap-size=1024 -cheerp-mode=wasm -DSMALL_DATASET -w -o poly/correlation/wasm/Oz/correlation_-DSMALL_DATASET_Oz.wasm -Oz -cheerp-wasm-loader=poly/correlation/wasm/Oz/correlation_-DSMALL_DATASET_Oz_load.js
 ```
 
-It should be noted that there are three specific benchmarks in this suite that need to modify 
-'utilities/polybench.c' to the corresponding type before compilation.
+Pay attention to three command line options:
+```-cheerp-linear-heap-size=1024``` for enlarging WebAssembly maximum heap size to 1024 MiB,
+```-DSMALL_DATASET``` for setting input size to 'S',
+```-Oz``` for using optimization level ```-Oz```.
+
+There are three benchmarks in this suite that need to modify 
+'utilities/polybench.c' before compilation.
 
 ```
 // [medley] deriche
 //void* ret = (float*) malloc (val);
 // [medley] floyd-warshall nussinov
 //void* ret = (int*) malloc (val);
+// other benchmarks
+void* ret = (double*) malloc (val);
 ```
 
 ##### CHStone
 
-We have provided the Python script ```compilation_scripts/chs.py```
-as the reference for developers to compile their own modified PolyBenchC benchmarks.
+The script ```compilation_scripts/chs.py```
+can be the reference for developers to compile their own modified CHStone benchmarks.
 
-If you want to understand, write or modify the script by yourself, this is the final script used by our scripts
+If you want to write or modify the compilation script by yourself, this is the final command used by our script
 to compile 'dfsin' benchmark in CHStone.
 
 ```
@@ -106,30 +106,24 @@ to compile 'dfsin' benchmark in CHStone.
 ### 2. Experiment Process
 
 #### a) Modify the HTML file to load the JavaScript/WebAssembly file:
-JavaScript: replace the value of 'src' with the corresponding JavaScript file path, 
+JavaScript: replace the value of 'src' with the corresponding JavaScript file 'xx.js' path, 
 then save the following HTML code as 'test.html'.  
 WebAssembly: replace the value of 'src' with the corresponding 'xx_load.js' file path, 
 then save the following HTML code as 'test.html'.
 
 ```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <script defer src="./XXX.js"></script>
-</head>
-<body></body>
-</html>
+<script defer src="file_path"></script>
 ```
 
 #### b) Build a local server where 'test.html' locates.
 
-It is fine to use Node.js or any other approach to set up a server under compiled_benchmarks/. Below is a simple method
-if you have python2 installed. 
+you can use Node.js or any other approach to set up a server under compiled_benchmarks/.  
+We also provide an alternative method to run a Python SimpleHTTPServer if you have python2 installed... 
 ```
 //Works with python 2.7
 python -m SimpleHTTPServer 
 ```
-We provide an alternative way to set up a wasm-compatible python server:
+... or another way to set up a wasm-compatible python server:
 ```python
 python compiled_benchmarks/server.py
 ```
@@ -146,17 +140,18 @@ python compiled_benchmarks/server.py
  
 #### h) Repeat steps d-g) for another benchmark. 
 
-#####An alternative way to automatically execute step c) to g):  
+#### An alternative way to automatically execute step c) to g):  
 Extra dependencies for this script:
 - Python 3.7 and above
 - chromedriver, version corresponding to your Chrome version
-- Selenium
+- Selenium  
+
 Install all dependencies, fill your chromedriver path in line 19 of ```auto.py```, then run
 ```python
 python3 auto.py
 ```
 
-### 3. Manually Implementation of JS Benchmarks and Real-World Applications
+### 3. Other Benchmarks
 
 [Manually Implementation of JS Benchmarks](https://github.com/BenchmarkingWasm/BenchmarkingWebAssembly/tree/master/other_benchmarks)  
 [Long.js](https://github.com/dcodeIO/Long.js/)  
@@ -164,6 +159,7 @@ python3 auto.py
 [FFmpeg: WASM](https://github.com/ffmpegwasm/ffmpeg.wasm), [FFmpeg:JS](https://github.com/damianociarla/node-ffmpeg), 
 and the [input file](https://moon.nasa.gov/resources/99/the-moons-role-in-a-solar-eclipse/) for FFmpeg conversion.
 
+----
 Some Findings
 --
 

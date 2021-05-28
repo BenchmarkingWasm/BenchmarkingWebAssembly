@@ -1,4 +1,4 @@
-,,,avg,corrected
+,,,avg_time,memory
 covariance,mini,js,2.83,884
 ,mini,wasm,0.0718,2018
 ,small,js,9.9712,883

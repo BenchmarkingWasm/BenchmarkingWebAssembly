@@ -1,4 +1,4 @@
-name,running time,code size
+benchmark,execution time,code size
 covariance_-DMEDIUM_DATASET0,0.0412794,13600
 covariance_-DMEDIUM_DATASET_O10,0.034089,13648
 covariance_-DMEDIUM_DATASET_O20,0.0182588,13504

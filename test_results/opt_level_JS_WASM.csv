@@ -1,4 +1,4 @@
-filename,first time,memory,compile time,size
+benchmark,execution time,memory,compile time,code size
 covariance_-DMEDIUM_DATASET_O.js,0.028223,518,0.300611151,44490
 covariance_-DMEDIUM_DATASET_O_load.js,0.0323002,2618,0.34021611,32384
 covariance_-DMEDIUM_DATASET_O1.js,0.0274522,519,0.309666488,45106
